@@ -106,7 +106,14 @@ jobs:
           # service_account: '${{ secrets.SA_EMAIL }}' 
 
       - name: Setup Google Cloud CLI
-        uses: google-github-actions/setup-gcloud@v2          
+        uses: google-github-actions/setup-gcloud@v2
+        with:
+          project_id: nasir-456515  
+          
+      - name: Configure gsutil and set project
+        run: |
+          gcloud config set project nasir-456515
+          gcloud config set pass_credentials_to_gsutil true          
 
       - name: Verify Authentication
         run: |
