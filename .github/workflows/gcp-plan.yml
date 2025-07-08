@@ -5,7 +5,8 @@ on:
     branches: 
       # - '**'
       # - '!main'
-      - 'main'
+    branches: ['main']
+    
     paths:
       - 'gcp/services/**.tf' 
       - 'gcp/services/**.tfvars'  
