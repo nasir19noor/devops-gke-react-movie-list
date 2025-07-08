@@ -107,13 +107,11 @@ jobs:
 
       - name: Setup Google Cloud CLI
         uses: google-github-actions/setup-gcloud@v2
-        with:
-          project_id: nasir-456515  
           
-      - name: Configure gsutil and set project
+      - name: Configure gsutil
         run: |
-          gcloud config set project nasir-456515
-          gcloud config set pass_credentials_to_gsutil true          
+          gcloud config set pass_credentials_to_gsutil true
+          gcloud auth configure-docker --quiet       
 
       - name: Verify Authentication
         run: |
