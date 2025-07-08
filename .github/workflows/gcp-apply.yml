@@ -104,7 +104,7 @@ jobs:
           service_account: 'github-actions@nasir-456515.iam.gserviceaccount.com'            
           # workload_identity_provider: '${{ secrets.WIF_PROVIDER }}'
           # service_account: '${{ secrets.SA_EMAIL }}'
-          token_format: 'access_token'    
+          # token_format: 'access_token'    
 
       - name: Verify Authentication
         run: |
@@ -117,7 +117,13 @@ jobs:
           state_bucket=$(yq e '.global.state_bucket' config.yaml)
           sed -i "s/^bucket = .*/bucket = \"${state_bucket}\"/" backend.conf
           sleep 100
-          cat backend.conf                
+          cat backend.conf   
+          
+      - name: Verify GCS Access
+        run: |
+          cd gcp
+          state_bucket=$(yq e '.global.state_bucket' config.yaml)
+          gsutil ls gs://${state_bucket}/ || echo "Bucket access verification failed"          
       - name: Terraform Init
         working-directory: ${{ matrix.directory }}       
         run: |
