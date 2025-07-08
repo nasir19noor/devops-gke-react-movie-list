@@ -103,13 +103,15 @@ jobs:
           workload_identity_provider: 'projects/765255964105/locations/global/workloadIdentityPools/github-actions/providers/github'
           service_account: 'github-actions@nasir-456515.iam.gserviceaccount.com'            
           # workload_identity_provider: '${{ secrets.WIF_PROVIDER }}'
-          # service_account: '${{ secrets.SA_EMAIL }}'
-          # token_format: 'access_token'    
+          # service_account: '${{ secrets.SA_EMAIL }}' 
+
+      - name: Setup Google Cloud CLI
+        uses: google-github-actions/setup-gcloud@v2          
 
       - name: Verify Authentication
         run: |
-          gcloud auth list
-          gcloud config list project          
+          echo "Authenticated as: $(gcloud auth list --filter=status:ACTIVE --format='value(account)')"
+          echo "Project: $(gcloud config get-value project)"          
 
       - name: Configure backend.conf
         run: |
