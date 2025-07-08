@@ -8,6 +8,11 @@ on:
       - 'gcp/services/**.tfvars'  
       - '.github/workflows/gcp-apply.yml'
 
+      # Add these permissions for Workload Identity Federation
+permissions:
+  contents: read
+  id-token: write
+
 env:
   TF_VERSION: '1.11.4'  
   GCP_REGION: 'asia-southeast1'  
@@ -92,7 +97,7 @@ jobs:
         with:
           # workload_identity_provider: '${{ secrets.WIF_PROVIDER }}'
           # service_account: '${{ secrets.SA_EMAIL }}'  
-          workload_identity_provider: 'projects/765255964105/locations/global/workloadIdentityPools/github-actions/attribute.repository/nasir19noor/devops-gke-react-movie-list'
+          workload_identity_provider: 'projects/765255964105/locations/global/workloadIdentityPools/github-actions/providers/github'
           service_account: 'github-actions@nasir-456515.iam.gserviceaccount.com'          
 
       - name: Configure backend.conf
