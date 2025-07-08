@@ -107,7 +107,7 @@ jobs:
 
       - name: Configure backend.conf
         run: |
-          gsutil ls
+          gcloud iam service-accounts describe github-actions@nasir-456515.iam.gserviceaccount.com
           cd gcp
           state_bucket=$(yq e '.global.state_bucket' config.yaml)
           sed -i "s/^bucket = .*/bucket = \"${state_bucket}\"/" backend.conf
