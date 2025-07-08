@@ -92,19 +92,20 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v3
 
+      - name: Setup Terraform
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: ${{ env.TF_VERSION }}        
+
       - id: auth
         uses: google-github-actions/auth@v2.0.0
         with:
           workload_identity_provider: '${{ secrets.WIF_PROVIDER }}'
-          service_account: '${{ secrets.SA_EMAIL }}'  
-          # workload_identity_provider: 'projects/765255964105/locations/global/workloadIdentityPools/github-actions/providers/github'
-          # service_account: 'github-actions@nasir-456515.iam.gserviceaccount.com'          
+          service_account: '${{ secrets.SA_EMAIL }}'            
 
       - name: Configure backend.conf
         run: |
-          pwd
           cd gcp
-          ls -la
           state_bucket=$(yq e '.global.state_bucket' config.yaml)
           sed -i "s/^bucket = .*/bucket = \"${state_bucket}\"/" backend.conf
           sleep 100
@@ -112,9 +113,7 @@ jobs:
       - name: Terraform Init
         working-directory: ${{ matrix.directory }}       
         run: |
-          pwd
           cp ../../backend.conf .
-          cat backend.conf
           terraform init -backend-config=backend.conf
 
       - name: Terraform Validate
