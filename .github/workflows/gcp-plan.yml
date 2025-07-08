@@ -2,11 +2,11 @@ name: 'TF Plan'
 
 on:
   push:
-    branches: 
+    # branches: 
       # - '**'
       # - '!main'
     branches: ['main']
-    
+
     paths:
       - 'gcp/services/**.tf' 
       - 'gcp/services/**.tfvars'  
