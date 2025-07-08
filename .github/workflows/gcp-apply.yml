@@ -20,7 +20,7 @@ jobs:
     steps:
       - name: Configure GCP
         env:
-          VAULT_ADDR: "http://127.0.0.1:8200"  # Use http:// instead of https://
+          VAULT_ADDR: "http://127.0.0.1:8200" 
           VAULT_TOKEN: ${{ secrets.VAULT_TOKEN }}      
         run: |
           pwd
@@ -30,14 +30,7 @@ jobs:
           /home/nasir/google-cloud-sdk/bin/gcloud auth activate-service-account --key-file=gcp-service-account.json
           #/home/nasir/google-cloud-sdk/bin/gcloud auth application-default login --no-launch-browser
           /home/nasir/google-cloud-sdk/bin/gcloud config set project nasir-456515
-          echo "GOOGLE_APPLICATION_CREDENTIALS=$(pwd)/gcp-service-account.json" >> $GITHUB_ENV
-
-    # steps:
-    #   - name: Configure GCP SDK
-    #     uses: google-github-actions/setup-gcloud@v1
-    #     with:
-    #       service_account_key: ${{ secrets.GCP_SA_KEY }}
-    #       project_id: nasir-456515    
+          echo "GOOGLE_APPLICATION_CREDENTIALS=$(pwd)/gcp-service-account.json" >> $GITHUB_ENV  
 
   detect-changed-dirs:
     name: Detect Changed Directories
