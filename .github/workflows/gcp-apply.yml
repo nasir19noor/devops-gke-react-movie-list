@@ -90,12 +90,12 @@ jobs:
     
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v3     
 
       - name: Setup Terraform
         uses: hashicorp/setup-terraform@v3
         with:
-          terraform_version: ${{ env.TF_VERSION }}        
+          terraform_version: ${{ env.TF_VERSION }}   
 
       - id: auth
         uses: google-github-actions/auth@v2.0.0
@@ -103,11 +103,16 @@ jobs:
           workload_identity_provider: 'projects/765255964105/locations/global/workloadIdentityPools/github-actions/providers/github'
           service_account: 'github-actions@nasir-456515.iam.gserviceaccount.com'            
           # workload_identity_provider: '${{ secrets.WIF_PROVIDER }}'
-          # service_account: '${{ secrets.SA_EMAIL }}'            
+          # service_account: '${{ secrets.SA_EMAIL }}'
+          token_format: 'access_token'    
+
+      - name: Verify Authentication
+        run: |
+          gcloud auth list
+          gcloud config list project          
 
       - name: Configure backend.conf
         run: |
-          gcloud iam service-accounts describe github-actions@nasir-456515.iam.gserviceaccount.com
           cd gcp
           state_bucket=$(yq e '.global.state_bucket' config.yaml)
           sed -i "s/^bucket = .*/bucket = \"${state_bucket}\"/" backend.conf
