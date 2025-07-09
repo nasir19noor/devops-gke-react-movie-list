@@ -30,12 +30,11 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v3
 
-    # Step 1: Set up Google Cloud CLI environment correctly. 
-    # This action handles installing gcloud and all necessary components like the auth plugin.
+    # 1. Set up Google Cloud CLI and all required components (including the auth plugin).
     - name: Set up Google Cloud CLI
       uses: google-github-actions/setup-gcloud@v2
 
-    # Step 2: Authenticate to Google Cloud using the gcloud CLI set up in the previous step.
+    # 2. Authenticate to Google Cloud.
     - name: Authenticate to Google Cloud
       id: auth
       uses: google-github-actions/auth@v2
@@ -43,18 +42,16 @@ jobs:
         workload_identity_provider: 'projects/765255964105/locations/global/workloadIdentityPools/github-actions/providers/github'
         service_account: 'github-actions@nasir-456515.iam.gserviceaccount.com'
 
-    # Step 3: Get GKE cluster credentials. This command will now work because the previous steps
-    # properly installed and configured both gcloud and the required auth plugin.
+    # 3. Get GKE credentials. This command configures kubectl to use the auth plugin.
     - name: Get GKE Credentials
       run: gcloud container clusters get-credentials ${{ env.GKE_CLUSTER }} --zone ${{ env.GKE_ZONE }}
 
-    # Step 4: Run kubectl commands to deploy your application.
+    # 4. Deploy to GKE. Kubectl will now be able to find and use the auth plugin.
     - name: Deploy to GKE
       run: |
         IMAGE_FULL_PATH="${{ env.AR_LOCATION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.AR_REPO }}/${{ env.IMAGE_NAME }}:${{ github.event.inputs.image_tag }}"
         echo "Deploying image: $IMAGE_FULL_PATH"
         
-        # Check for namespace and create if it doesn't exist
         kubectl get namespace ${{ env.GKE_NAMESPACE }} || kubectl create namespace ${{ env.GKE_NAMESPACE }}
         
         sed -i "s|asia-southeast1-docker.pkg.dev/nasir-456515/nasir/gke-app:latest|$IMAGE_FULL_PATH|" gcp/k8s/deployment.yaml
@@ -62,7 +59,7 @@ jobs:
         kubectl apply -f gcp/k8s/deployment.yaml --namespace ${{ env.GKE_NAMESPACE }}
         kubectl apply -f gcp/k8s/service.yaml --namespace ${{ env.GKE_NAMESPACE }}
 
-    # Step 5: Verify the deployment was successful.
+    # 5. Verify the deployment.
     - name: Verify Deployment
       run: |
         echo "Deployment to GKE submitted. Waiting for rollout..."
