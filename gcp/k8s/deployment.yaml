@@ -1,23 +1,23 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: gke-app-deployment
+  name: react-movie-deployment
   namespace: nasir 
   labels:
-    app: gke-app 
+    app: react-movie 
 spec:
   replicas: 2 
   selector:
     matchLabels:
-      app: gke-app 
+      app: react-movie 
   template:
     metadata:
       labels:
-        app: gke-app 
+        app: react-movie 
     spec:
       containers:
-      - name: gke-app 
-        image: asia-southeast1-docker.pkg.dev/nasir-456515/nasir/gke-app:latest
+      - name: react-movie 
+        image: asia-southeast1-docker.pkg.dev/nasir-456515/nasir/react-movie:latest
         ports:
         - containerPort: 8000 
         env:
