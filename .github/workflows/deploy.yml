@@ -35,7 +35,11 @@ jobs:
       with:
         workload_identity_provider: 'projects/765255964105/locations/global/workloadIdentityPools/github-actions/providers/github'
         service_account: 'github-actions@nasir-456515.iam.gserviceaccount.com'  
-        
+
+    - name: Install gke-gcloud-auth-plugin
+      run: |
+        gcloud components install gke-gcloud-auth-plugin
+                
     - name: Get GKE Credentials
       run: |
         gcloud container clusters get-credentials ${{ env.GKE_CLUSTER }} --zone ${{ env.GKE_ZONE }}        
