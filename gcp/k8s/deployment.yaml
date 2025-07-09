@@ -19,13 +19,7 @@ spec:
       - name: react-movie 
         image: asia-southeast1-docker.pkg.dev/nasir-456515/nasir/react-movie:latest
         ports:
-        - containerPort: 8000 
-        env:
-        - name: DJANGO_SECRET_KEY 
-          valueFrom:
-            secretKeyRef:
-              name: django-secret-key
-              key: SECRET_KEY 
+        - containerPort: 5173 
         resources:
         
           requests:
@@ -37,7 +31,7 @@ spec:
         livenessProbe:
           httpGet:
             path: / 
-            port: 8000
+            port: 5173
           initialDelaySeconds: 30
           periodSeconds: 10 
           timeoutSeconds: 5
@@ -45,7 +39,7 @@ spec:
         readinessProbe:
           httpGet:
             path: / 
-            port: 8000
+            port: 5173
           initialDelaySeconds: 15 
           periodSeconds: 5 
           timeoutSeconds: 3 
