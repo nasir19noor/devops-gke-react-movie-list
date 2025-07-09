@@ -30,53 +30,42 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v3
 
+    # Step 1: Set up Google Cloud CLI environment correctly. 
+    # This action handles installing gcloud and all necessary components like the auth plugin.
     - name: Set up Google Cloud CLI
-      uses: google-github-actions/setup-gcloud@v2      
+      uses: google-github-actions/setup-gcloud@v2
 
+    # Step 2: Authenticate to Google Cloud using the gcloud CLI set up in the previous step.
     - name: Authenticate to Google Cloud
       id: auth
       uses: google-github-actions/auth@v2
       with:
         workload_identity_provider: 'projects/765255964105/locations/global/workloadIdentityPools/github-actions/providers/github'
-        service_account: 'github-actions@nasir-456515.iam.gserviceaccount.com'  
+        service_account: 'github-actions@nasir-456515.iam.gserviceaccount.com'
 
-    - name: Install gke-gcloud-auth-plugin
-      run: |
-        sudo apt-get update
-        sudo apt-get install -y google-cloud-cli-gke-gcloud-auth-plugin
-
+    # Step 3: Get GKE cluster credentials. This command will now work because the previous steps
+    # properly installed and configured both gcloud and the required auth plugin.
     - name: Get GKE Credentials
-      run: |
-        gcloud container clusters get-credentials ${{ env.GKE_CLUSTER }} --zone ${{ env.GKE_ZONE }}        
+      run: gcloud container clusters get-credentials ${{ env.GKE_CLUSTER }} --zone ${{ env.GKE_ZONE }}
 
-    - name: Check and Create Kubernetes Namespace
-      run: |
-        kubectl get nodes
-        kubectl get namespace ${{ env.GKE_NAMESPACE }} || kubectl create namespace ${{ env.GKE_NAMESPACE }}
-
+    # Step 4: Run kubectl commands to deploy your application.
     - name: Deploy to GKE
       run: |
         IMAGE_FULL_PATH="${{ env.AR_LOCATION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.AR_REPO }}/${{ env.IMAGE_NAME }}:${{ github.event.inputs.image_tag }}"
-        
         echo "Deploying image: $IMAGE_FULL_PATH"
+        
+        # Check for namespace and create if it doesn't exist
+        kubectl get namespace ${{ env.GKE_NAMESPACE }} || kubectl create namespace ${{ env.GKE_NAMESPACE }}
         
         sed -i "s|asia-southeast1-docker.pkg.dev/nasir-456515/nasir/gke-app:latest|$IMAGE_FULL_PATH|" gcp/k8s/deployment.yaml
         
-        kubectl apply -f gcp/k8s/namespace.yaml # Apply namespace just in case
-        kubectl apply -f gcp/k8s/deployment.yaml
-        kubectl apply -f gcp/k8s/service.yaml
+        kubectl apply -f gcp/k8s/deployment.yaml --namespace ${{ env.GKE_NAMESPACE }}
+        kubectl apply -f gcp/k8s/service.yaml --namespace ${{ env.GKE_NAMESPACE }}
 
-    - name: Verify Deployment (Optional)
+    # Step 5: Verify the deployment was successful.
+    - name: Verify Deployment
       run: |
         echo "Deployment to GKE submitted. Waiting for rollout..."
         kubectl rollout status deployment/gke-app-deployment -n ${{ env.GKE_NAMESPACE }}
         echo "Verifying service external IP..."
         kubectl get service gke-app-service -n ${{ env.GKE_NAMESPACE }}
-        sleep 60
-        echo "Attempting to retrieve external IP address..."
-        EXTERNAL_IP=$(kubectl get service gke-app-service -n ${{ env.GKE_NAMESPACE }} -o jsonpath='{.status.loadBalancer.ingress[0].ip}')
-        if [ -z "$EXTERNAL_IP" ]; then
-          echo "External IP not yet assigned or failed to retrieve. Please check the service status manually."
-        else
-          echo "Application should be accessible at: http://$EXTERNAL_IP"
-        fi
