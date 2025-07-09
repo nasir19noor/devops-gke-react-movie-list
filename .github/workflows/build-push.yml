@@ -21,7 +21,7 @@ env:
   PROJECT_ID: nasir-456515 
   AR_REPO: nasir           
   AR_LOCATION: asia-southeast1 
-  IMAGE_NAME: gke-app      
+  IMAGE_NAME: react-movie     
 
 jobs:
   build-and-push:
