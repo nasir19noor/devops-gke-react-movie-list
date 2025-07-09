@@ -3,13 +3,13 @@ name: Build and Push Docker Image to Artifact Registry
 on:
   push:
     paths:
-      - 'react-movie/**'
+      - 'app/**'
       - '.github/workflows/build-push.yml'
     branches:
       - main    
   pull_request:
     paths:
-      - 'react-movie/**'
+      - 'app/**'
       - '.github/workflows/build-push.yml'   
     branches:
       - main
