@@ -41,24 +41,19 @@ jobs:
       uses: google-github-actions/setup-gcloud@v2        
 
     - name: Set up Cloud SDK
-      uses: google-github-actions/setup-gcloud@v2          
-    - name: Configure Docker for Artifact Registry
-      env:
-        SSH_PASSWORD: ${{ secrets.SSH_PASSWORD }} 
-      run: |
-        docker login -u oauth2accesstoken --password-stdin asia-southeast1-docker.pkg.dev
+      uses: google-github-actions/setup-gcloud@v2
 
-        echo $GOOGLE_APPLICATION_CREDENTIALS
-        cat $GOOGLE_APPLICATION_CREDENTIALS
+    - name: Configure Docker for Artifact Registry
+      run: gcloud auth configure-docker ${{ env.AR_LOCATION }}-docker.pkg.dev
+
     - name: Build and Push Docker Image
       run: |
         cd react-movie
-        gcloud auth configure-docker asia-southeast1-docker.pkg.dev
-        docker build -t asia-southeast1-docker.pkg.dev/nasir-456515/nasir/django-app:latest .
-        docker push asia-southeast1-docker.pkg.dev/nasir-456515/nasir/django-app:latest
+        docker build -t ${{ env.AR_LOCATION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.AR_REPO }}/${{ env.IMAGE_NAME }}:latest .
+        docker push ${{ env.AR_LOCATION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.AR_REPO }}/${{ env.IMAGE_NAME }}:latest
 
-    - name: Verify Image Push (Optional)
+    - name: Verify Image Push
       run: |
-        echo "Image pushed successfully to asia-southeast1-docker.pkg.dev/nasir-456515/nasir/django-app:latest"
+        echo "Image pushed successfully to ${{ env.AR_LOCATION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.AR_REPO }}/${{ env.IMAGE_NAME }}:latest"
 
 
