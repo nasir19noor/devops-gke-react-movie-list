@@ -8,6 +8,10 @@ on:
         required: false
         default: 'latest' 
 
+permissions:
+  contents: read
+  id-token: write           
+
 env:
   PROJECT_ID: nasir-456515 
   AR_REPO: nasir           
@@ -20,40 +24,25 @@ env:
 
 jobs:
   deploy:
-    runs-on: [self-hosted, contabo]
+    runs-on: ubuntu-latest
     
     steps:
     - name: Checkout code
-      uses: actions/checkout@v4
+      uses: actions/checkout@v3
 
-    - name: Authenticate Google Cloud CLI
-      env:
-        GCP_SA_KEY: ${{ secrets.GCP_SA_KEY }} 
-      run: |
-        echo "$GCP_SA_KEY" > ./gcp-key.json
-        ${{ env.GCLOUD_CLI }} auth activate-service-account --key-file=./gcp-key.json --project=${{ env.PROJECT_ID }}
-        ${{ env.GCLOUD_CLI }} config set project ${{ env.PROJECT_ID }}
-        cat ./gcp-key.json
-        rm ./gcp-key.json
-        
-    - name: Add gcloud to PATH and Set up GKE credentials
-      run: |
-        # Add gcloud to PATH for this step and subsequent steps
-        export PATH="/home/nasir/google-cloud-sdk/bin:$PATH"
-        echo "/home/nasir/google-cloud-sdk/bin" >> $GITHUB_PATH
-        ${{ env.GCLOUD_CLI }} container clusters get-credentials "${{ env.GKE_CLUSTER }}" --zone "${{ env.GKE_ZONE }}" --project "${{ env.PROJECT_ID }}"
+    - id: auth
+      uses: google-github-actions/auth@v2.0.0
+      with:
+        workload_identity_provider: 'projects/765255964105/locations/global/workloadIdentityPools/github-actions/providers/github'
+        service_account: 'github-actions@nasir-456515.iam.gserviceaccount.com'
+
+    - name: Setup Google Cloud CLI
+      uses: google-github-actions/setup-gcloud@v2        
 
     - name: Check and Create Kubernetes Namespace
       run: |
         kubectl get nodes
         kubectl get namespace ${{ env.GKE_NAMESPACE }} || kubectl create namespace ${{ env.GKE_NAMESPACE }}
-
-    - name: Create or Update Django Secret Key in Kubernetes
-      run: |
-        kubectl delete secret django-secret-key -n ${{ env.GKE_NAMESPACE }} --ignore-not-found
-        echo -n '${{ secrets.DJANGO_SECRET_KEY }}' | kubectl create secret generic django-secret-key \
-          --from-file=SECRET_KEY=/dev/stdin \
-          -n ${{ env.GKE_NAMESPACE }}
 
     - name: Deploy to GKE
       run: |
