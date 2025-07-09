@@ -37,4 +37,3 @@ module "firewall-allow-30080" {
   target_tags   = ["gke-nasir-cluster-0c073d54-node"]
 }
 
-
