@@ -41,7 +41,9 @@ jobs:
         service_account: 'github-actions@nasir-456515.iam.gserviceaccount.com'
 
     - name: Get GKE Credentials
-      run: gcloud container clusters get-credentials ${{ env.GKE_CLUSTER }} --zone ${{ env.GKE_ZONE }}
+      run: |
+        gcloud components install gke-gcloud-auth-plugin
+        gcloud container clusters get-credentials ${{ env.GKE_CLUSTER }} --zone ${{ env.GKE_ZONE }}
 
     - name: Deploy to GKE
       run: |
@@ -54,7 +56,7 @@ jobs:
         
         kubectl apply -f gcp/k8s/deployment.yaml --namespace ${{ env.GKE_NAMESPACE }}
         kubectl apply -f gcp/k8s/service.yaml --namespace ${{ env.GKE_NAMESPACE }}
-        
+
     - name: Verify Deployment
       run: |
         echo "Deployment to GKE submitted. Waiting for rollout..."
