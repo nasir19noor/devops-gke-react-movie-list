@@ -30,8 +30,12 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v3
 
-    - id: auth
-      uses: google-github-actions/auth@v2.0.0
+    - name: Set up Google Cloud CLI
+      uses: google-github-actions/setup-gcloud@v2      
+
+    - name: Authenticate to Google Cloud
+      id: auth
+      uses: google-github-actions/auth@v2
       with:
         workload_identity_provider: 'projects/765255964105/locations/global/workloadIdentityPools/github-actions/providers/github'
         service_account: 'github-actions@nasir-456515.iam.gserviceaccount.com'  
