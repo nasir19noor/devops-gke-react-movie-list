@@ -1,0 +1,61 @@
+name: Build and Push Docker Image to Artifact Registry
+
+on:
+  push:
+    paths:
+      - 'react-movie/**'
+      - '.github/workflows/build-push.yml'
+    branches:
+      - main    
+  pull_request:
+    paths:
+      - 'react-movie/**'
+      - '.github/workflows/build-push.yml'   
+    branches:
+      - main
+
+env:
+  PROJECT_ID: nasir-456515 
+  AR_REPO: nasir           
+  AR_LOCATION: asia-southeast1 
+  IMAGE_NAME: gke-app      
+
+jobs:
+  build-and-push:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - id: auth
+      uses: google-github-actions/auth@v2.0.0
+      with:
+        workload_identity_provider: 'projects/765255964105/locations/global/workloadIdentityPools/github-actions/providers/github'
+        service_account: 'github-actions@nasir-456515.iam.gserviceaccount.com'
+
+    - name: Setup Google Cloud CLI
+      uses: google-github-actions/setup-gcloud@v2        
+
+    - name: Set up Cloud SDK
+      uses: google-github-actions/setup-gcloud@v2          
+    - name: Configure Docker for Artifact Registry
+      env:
+        SSH_PASSWORD: ${{ secrets.SSH_PASSWORD }} 
+      run: |
+        docker login -u oauth2accesstoken --password-stdin asia-southeast1-docker.pkg.dev
+
+        echo $GOOGLE_APPLICATION_CREDENTIALS
+        cat $GOOGLE_APPLICATION_CREDENTIALS
+    - name: Build and Push Docker Image
+      run: |
+        cd react-movie
+        gcloud auth configure-docker asia-southeast1-docker.pkg.dev
+        docker build -t asia-southeast1-docker.pkg.dev/nasir-456515/nasir/django-app:latest .
+        docker push asia-southeast1-docker.pkg.dev/nasir-456515/nasir/django-app:latest
+
+    - name: Verify Image Push (Optional)
+      run: |
+        echo "Image pushed successfully to asia-southeast1-docker.pkg.dev/nasir-456515/nasir/django-app:latest"
+
+
