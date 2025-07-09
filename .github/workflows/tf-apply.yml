@@ -1,4 +1,4 @@
-name: 'GCP Apply'
+name: 'Terraform Apply'
 
 on:
   push:
