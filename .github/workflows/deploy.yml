@@ -60,6 +60,6 @@ jobs:
     - name: Verify Deployment
       run: |
         echo "Deployment to GKE submitted. Waiting for rollout..."
-        kubectl rollout status deployment/gke-app-deployment -n ${{ env.GKE_NAMESPACE }}
+        kubectl rollout status deployment/react-movie-deployment -n ${{ env.GKE_NAMESPACE }}
         echo "Verifying service external IP..."
-        kubectl get service gke-app-service -n ${{ env.GKE_NAMESPACE }}
+        kubectl get service react-movie-service -n ${{ env.GKE_NAMESPACE }}
