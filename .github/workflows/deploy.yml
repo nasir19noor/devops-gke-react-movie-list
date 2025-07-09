@@ -34,7 +34,11 @@ jobs:
       uses: google-github-actions/auth@v2.0.0
       with:
         workload_identity_provider: 'projects/765255964105/locations/global/workloadIdentityPools/github-actions/providers/github'
-        service_account: 'github-actions@nasir-456515.iam.gserviceaccount.com'    
+        service_account: 'github-actions@nasir-456515.iam.gserviceaccount.com'  
+        
+    - name: Get GKE Credentials
+      run: |
+        gcloud container clusters get-credentials ${{ env.GKE_CLUSTER }} --zone ${{ env.GKE_ZONE }}        
 
     - name: Check and Create Kubernetes Namespace
       run: |
