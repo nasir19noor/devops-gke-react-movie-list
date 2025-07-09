@@ -54,7 +54,7 @@ jobs:
         
         kubectl get namespace ${{ env.GKE_NAMESPACE }} || kubectl create namespace ${{ env.GKE_NAMESPACE }}
         
-        sed -i "s|asia-southeast1-docker.pkg.dev/nasir-456515/nasir/gke-app:latest|$IMAGE_FULL_PATH|" gcp/k8s/deployment.yaml
+        sed -i "s|asia-southeast1-docker.pkg.dev/nasir-456515/nasir/react-movie:latest|$IMAGE_FULL_PATH|" gcp/k8s/deployment.yaml
         
         kubectl apply -f gcp/k8s/deployment.yaml --namespace ${{ env.GKE_NAMESPACE }}
         kubectl apply -f gcp/k8s/service.yaml --namespace ${{ env.GKE_NAMESPACE }}
