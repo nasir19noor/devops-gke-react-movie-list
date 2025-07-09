@@ -30,11 +30,9 @@ jobs:
     - name: Checkout code
       uses: actions/checkout@v3
 
-    # 1. Set up Google Cloud CLI and all required components (including the auth plugin).
     - name: Set up Google Cloud CLI
       uses: google-github-actions/setup-gcloud@v2
 
-    # 2. Authenticate to Google Cloud.
     - name: Authenticate to Google Cloud
       id: auth
       uses: google-github-actions/auth@v2
@@ -42,11 +40,9 @@ jobs:
         workload_identity_provider: 'projects/765255964105/locations/global/workloadIdentityPools/github-actions/providers/github'
         service_account: 'github-actions@nasir-456515.iam.gserviceaccount.com'
 
-    # 3. Get GKE credentials. This command configures kubectl to use the auth plugin.
     - name: Get GKE Credentials
       run: gcloud container clusters get-credentials ${{ env.GKE_CLUSTER }} --zone ${{ env.GKE_ZONE }}
 
-    # 4. Deploy to GKE. Kubectl will now be able to find and use the auth plugin.
     - name: Deploy to GKE
       run: |
         IMAGE_FULL_PATH="${{ env.AR_LOCATION }}-docker.pkg.dev/${{ env.PROJECT_ID }}/${{ env.AR_REPO }}/${{ env.IMAGE_NAME }}:${{ github.event.inputs.image_tag }}"
@@ -58,8 +54,7 @@ jobs:
         
         kubectl apply -f gcp/k8s/deployment.yaml --namespace ${{ env.GKE_NAMESPACE }}
         kubectl apply -f gcp/k8s/service.yaml --namespace ${{ env.GKE_NAMESPACE }}
-
-    # 5. Verify the deployment.
+        
     - name: Verify Deployment
       run: |
         echo "Deployment to GKE submitted. Waiting for rollout..."
