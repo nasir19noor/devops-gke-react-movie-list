@@ -20,8 +20,13 @@ spec:
         image: asia-southeast1-docker.pkg.dev/nasir-456515/nasir/react-movie:latest
         ports:
         - containerPort: 5173 
+        env:
+          - name: "VITE_TMDB_API_KEY"
+            valueFrom:
+              secretKeyRef:
+                name: tmdb-api-secret
+                key: VITE_TMDB_API_KEY
         resources:
-        
           requests:
             cpu: "100m" 
             memory: "128Mi" 

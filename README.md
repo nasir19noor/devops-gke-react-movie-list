@@ -99,6 +99,11 @@ gcloud iam service-accounts add-iam-policy-binding "github-actions@nasir-456515.
     --member="principalSet://iam.googleapis.com/projects/765255964105/locations/global/workloadIdentityPools/github-actions/attribute.repository/nasir19noor/devops-gke-react-movie-list"
 ```
 
-
+### Step 7: Setup GKE Secret
+```
+kubectl create secret generic tmdb-api-secret \
+  --namespace=nasir \
+  --from-literal=VITE_TMDB_API_KEY=<Your-TMDB-API-Key>
+```
 
 
