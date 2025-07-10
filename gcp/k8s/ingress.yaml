@@ -9,7 +9,7 @@ metadata:
     networking.gke.io/v1beta1.FrontendConfig: "http-to-https"
 spec:
   rules:
-  - host: gke.flask.nasir.id
+  - host: gke.react-movie.nasir.id
     http:
       paths:
       - path: /*
@@ -18,15 +18,4 @@ spec:
           service:
             name: my-flask-service
             port:
-              number: 5001
-
-  - host: gke.nginx.nasir.id
-    http:
-      paths:
-      - path: /*
-        pathType: ImplementationSpecific
-        backend:
-          service:
-            name: nginx-service
-            port:
-              number: 8080
+              number: 5173

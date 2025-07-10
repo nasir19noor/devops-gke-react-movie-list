@@ -55,6 +55,9 @@ jobs:
         
         kubectl apply -f gcp/k8s/deployment.yaml --namespace ${{ env.GKE_NAMESPACE }}
         kubectl apply -f gcp/k8s/service.yaml --namespace ${{ env.GKE_NAMESPACE }}
+        kubectl apply -f gcp/k8s/ingress.yaml --namespace ${{ env.GKE_NAMESPACE }}
+        kubectl apply -f gcp/k8s/managedcert.yaml --namespace ${{ env.GKE_NAMESPACE }} 
+        kubectl apply -f gcp/k8s/http-to-https.yaml --namespace ${{ env.GKE_NAMESPACE }}                  
 
     - name: Verify Deployment
       run: |
