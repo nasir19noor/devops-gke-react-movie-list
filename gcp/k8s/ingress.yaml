@@ -16,6 +16,6 @@ spec:
         pathType: ImplementationSpecific
         backend:
           service:
-            name: my-flask-service
+            name: react-movie-service
             port:
               number: 5173
