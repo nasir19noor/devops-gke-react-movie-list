@@ -5,6 +5,8 @@ metadata:
   namespace: nasir
   labels:
     app: react-movie
+  annotations:
+    cloud.google.com/backend-config: '{"ports": {"80":"react-movie-backendconfig"}}'  
 spec:
   selector:
     app: react-movie 
