@@ -54,11 +54,11 @@ jobs:
         sed -i "s|asia-southeast1-docker.pkg.dev/nasir-456515/nasir/react-movie:latest|$IMAGE_FULL_PATH|" gcp/k8s/deployment.yaml
         
         kubectl apply -f gcp/k8s/deployment.yaml --namespace ${{ env.GKE_NAMESPACE }}
-        kubectl delete -f gcp/k8s/backend.yaml --namespace ${{ env.GKE_NAMESPACE }}
+        #kubectl delete -f gcp/k8s/backend.yaml --namespace ${{ env.GKE_NAMESPACE }}
         kubectl apply -f gcp/k8s/service.yaml --namespace ${{ env.GKE_NAMESPACE }}
-        kubectl delete -f gcp/k8s/ingress.yaml --namespace ${{ env.GKE_NAMESPACE }}
+        #kubectl delete -f gcp/k8s/ingress.yaml --namespace ${{ env.GKE_NAMESPACE }}
         kubectl apply -f gcp/k8s/managedcert.yaml --namespace ${{ env.GKE_NAMESPACE }} 
-        kubectl delete -f gcp/k8s/http-to-https.yaml --namespace ${{ env.GKE_NAMESPACE }}                  
+        #kubectl delete -f gcp/k8s/http-to-https.yaml --namespace ${{ env.GKE_NAMESPACE }}                  
 
     - name: Verify Deployment
       run: |
