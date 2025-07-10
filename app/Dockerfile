@@ -1,16 +1,8 @@
-# Dockerfile
-
-# ---- Stage 1: Build the React application ----
-# Use a specific Node.js version for reproducible builds
 FROM node:20-alpine AS build
 
-# Set the working directory for the entire build process
 WORKDIR /app
-
-# Copy package.json and package-lock.json (or yarn.lock) for the root
-# and for the frontend directory. This step is cached by Docker.
-# COPY package*.json ./
-# COPY frontend/package*.json ./frontend/
+# ARG VITE_TMDB_API_KEY
+# ENV VITE_TMDB_API_KEY=$VITE_TMDB_API_KEY
 
 COPY . .
 
