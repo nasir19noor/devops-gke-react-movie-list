@@ -10,3 +10,5 @@ export default defineConfig({
     allowedHosts: ['gke.react-movie.nasir.id'],
   },
 })
+
+
