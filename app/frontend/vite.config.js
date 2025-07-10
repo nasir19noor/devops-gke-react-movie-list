@@ -5,8 +5,11 @@ import react from '@vitejs/plugin-react'
 export default defineConfig({
   plugins: [react()],
   server: {
-    // This allows Vite to receive requests from the specified host.
-    // It's a security measure to prevent DNS rebinding attacks.
+    cors: {
+      origin: ['http://gke.react-movie.nasir.id', 'http://localhost:5173'],
+			methods: ['GET', 'POST'],
+			allowedHeaders: ['Content-Type']
+    },
     allowedHosts: ['gke.react-movie.nasir.id'],
   },
 })
