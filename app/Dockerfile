@@ -9,8 +9,10 @@ WORKDIR /app
 
 # Copy package.json and package-lock.json (or yarn.lock) for the root
 # and for the frontend directory. This step is cached by Docker.
-COPY package*.json ./
-COPY frontend/package*.json ./frontend/
+# COPY package*.json ./
+# COPY frontend/package*.json ./frontend/
+
+COPY . .
 
 # Change to the frontend directory to install dependencies
 WORKDIR /app/frontend
@@ -19,7 +21,7 @@ RUN npm install
 # Copy the rest of your application source code
 # Note: We are in /app/frontend, so we copy the frontend code.
 # The Docker context should be the root of your project.
-COPY frontend/ .
+# COPY frontend/ .
 
 # Build the application for production.
 # This creates a static 'dist' folder in /app/frontend/
