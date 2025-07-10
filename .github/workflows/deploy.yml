@@ -20,7 +20,6 @@ env:
   GKE_CLUSTER: nasir-cluster
   GKE_ZONE: asia-southeast1-c 
   GKE_NAMESPACE: nasir  
-  GCLOUD_CLI: /home/nasir/google-cloud-sdk/bin/gcloud   
 
 jobs:
   deploy:
