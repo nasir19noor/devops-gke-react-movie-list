@@ -39,7 +39,7 @@ docker build -t react-movie .
 
 To run docker image, run this command
 ```
-docker run -p 5173:5173 react-movie
+docker run -p 80:80 react-movie
 ```
 
 Check it via browser

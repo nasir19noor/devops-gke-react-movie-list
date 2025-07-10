@@ -6,5 +6,5 @@ metadata:
 spec:
   healthCheck:
     requestPath: /
-    port: 5173
+    port: 80
     type: HTTP
